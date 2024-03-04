@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Пример визуальной фильтрации</title>
+    <style>
+        /* Стили для формы и результатов */
+        #filters {
+            margin-bottom: 20px;
+        }
+        #results {
+            list-style-type: none;
+            padding: 0;
+        }
+        .property {
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Форма для фильтрации -->
+    <form id="filters">
+        <label for="sort">Сортировать по:</label>
+        <select id="sort">
+            <option value="price">Цене</option>
+            <option value="area">Площади</option>
+            <!-- Добавьте другие опции сортировки, если необходимо -->
+        </select>
+        <label for="minPrice">Минимальная цена:</label>
+        <input type="number" id="minPrice" min="0">
+        <button type="submit">Применить фильтры</button>
+    </form>
+
+    <!-- Результаты фильтрации -->
+    <ul id="results">
+        <!-- Сюда будут добавлены результаты фильтрации -->
+    </ul>
+
+    <script>
+        // Пример данных о недвижимости
+        const properties = [
+            { title: "Квартира 1", price: 100000, area: 80 },
+            { title: "Квартира 2", price: 150000, area: 100 },
+            { title: "Квартира 3", price: 80000, area: 60 },
+            // Добавьте больше объектов данных, если необходимо
+        ];
+
+        // Функция для отображения результатов фильтрации
+        function displayResults(filteredProperties) {
+            const resultsElement = document.getElementById('results');
+            resultsElement.innerHTML = '';
+
+            filteredProperties.forEach(property => {
+                const propertyElement = document.createElement('li');
+                propertyElement.classList.add('property');
+                propertyElement.textContent = `${property.title} - Цена: ${property.price}, Площадь: ${property.area} кв.м`;
+                resultsElement.appendChild(propertyElement);
+            });
+        }
+
+        // Обработка отправки формы
+        document.getElementById('filters').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Получаем значения из формы
+            const sortBy = document.getElementById('sort').value;
+            const minPrice = parseInt(document.getElementById('minPrice').value);
+
+            // Фильтруем недвижимость в соответствии с заданными параметрами
+            const filteredProperties = properties.filter(property => {
+                return property.price >= minPrice;
+            });
+
+            // Сортируем результаты, если необходимо
+            if (sortBy === 'price') {
+                filteredProperties.sort((a, b) => a.price - b.price);
+            } else if (sortBy === 'area') {
+                filteredProperties.sort((a, b) => a.area - b.area);
+            }
+
+            // Отображаем отфильтрованные и отсортированные результаты
+            displayResults(filteredProperties);
+        });
+    </script>
+</body>
+</html>
